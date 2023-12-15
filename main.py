@@ -21,6 +21,7 @@ conferences_sorted = sorted(df['Conf'].unique())
 
 # Filters section
 st.title('Data Filtering')
+st.write('Here you can view and filter the dataset used for this dashboard. The data can be filtered by team(s), conference(s), and/or year(s).')
 
 # Filter by teams
 selected_teams = st.multiselect('Select Teams', teams_sorted)
@@ -81,6 +82,7 @@ with st.expander("Click here for Abbreviation Explanations"):
     
 # Heatmap section
 st.title('Correlation Heatmap')
+st.write('This graph shows how each of the numeric variables are correlated with each other. A -1 indicates a strong, negative correlation between the variables, a 1 indicates a strong, positive correlation, and a 0 indicates that there is no correlation between the two variables. The graph is particularly useful in seeing which variables are most correlated with wins.')
     
 # Select numerical columns to calculate correlation
 selected_columns = ['AdjOE', 'AdjDE', 'EFG%', 'EFGD%', 'TOR', 'TORD', 'ORB', 'DRB', 'FTR', 'FTRD',
@@ -109,6 +111,7 @@ selected_columns = ['Wins', 'AdjOE', 'AdjDE', 'EFG%', 'EFGD%', 'TOR', 'TORD', 'O
 
 # Streamlit app title and selection boxes
 st.title('Interactive Regression Plot')
+st.write('This interactive plot allows you to make a scatterplot with two numeric variables. It also provides a regression line to show how the average of the y-axis variable changes as the x-axis variable increases or decreases.')
 
 # Allow user to select X-axis and Y-axis variables with default values
 selected_x = st.selectbox('X-axis Variable', selected_columns, index=selected_columns.index('SoS'))
@@ -126,6 +129,7 @@ st.pyplot(plt)
         
 # Streamlit app title and selection boxes
 st.title('Top Teams with Most Wins')
+st.write('This interactive plot allows you to view what teams have had the most wins. The default option displays all 5 seasons as a total, but individual seasons can be selected. There are also filters than can change how many teams are displayed and whether or not the wins should be weighted by strength of schedule. When weighting by strength of schedule win numbers will look slightly different than the regular totals. This is because a win against a difficult opponent will count for more than a win against an easier opponent.')
 
 # Get unique teams and aggregate wins
 team_wins = df.groupby('Team')['Wins'].sum().reset_index()
@@ -170,6 +174,7 @@ else:
     
 # Streamlit app title
 st.title('Average Wins per Team by Conference')
+st.write('This interactive plot allows you to see which conferences have averaged the most wins per team. The graph defaults to view all 5 seasons, but individual seasons can be selected.')
 
 # Calculate total wins and number of unique teams per conference
 conf_summary = df.groupby('Conf').agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
@@ -181,7 +186,7 @@ selected_seasons = st.selectbox('Select Number of Seasons', ['All'] + list(df['S
 # Filter data based on selected seasons
 if selected_seasons != 'All':
     df_filtered = df[df['Season'] == selected_seasons]
-    conf_summary = df_filtered.groupby('Conf')['Wins', 'Team'].agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
+    conf_summary = df_filtered.groupby('Conf').agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
     conf_summary.columns = ['Conf', 'TotalWins', 'NumTeams']
 else:
     df_filtered = df.copy()
@@ -203,6 +208,7 @@ st.pyplot(plt)
 
 # Streamlit app title
 st.title('AdjOE and AdjDE for Selected Conferences')
+st.write('This interactive plot allows you to see the AdjOE and AdjDE boxplots for teams within, what is often referred to as, power 6 conferences. There is also the option to add or remove any conferences of your choosing.')
 
 # Default selection of top six conferences
 default_conferences = ['B12', 'B10', 'SEC', 'ACC', 'P12', 'BE']
@@ -236,6 +242,7 @@ st.pyplot(plt)
 
 # Streamlit app title
 st.title('Offensive vs Defensive Efficiency')
+st.write('This final graph compares the average wins for teams that were either in the top 10% for AdjOE or the top 10% for AdjDE. This provides a way to compare if offensive efficiency or defensive efficieny is more important for wins.')
 
 # Calculate the threshold values for the top 10% in AdjOE and bottom 10% in AdjDE
 top_10_AdjOE = df['AdjOE'].quantile(0.9)
