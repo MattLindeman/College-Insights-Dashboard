@@ -262,6 +262,7 @@ sns.boxplot(x='Category', y='Average Wins', data=melted_data, palette='pastel')
 plt.title('Average Wins per Season for Top 10% AdjOE vs Top 10% AdjDE (Excluding Intersection)')
 plt.ylabel('Average Wins')
 plt.xticks([0, 1], ['Top 10% AdjOE', 'Top 10% AdjDE'])
+plt.xlabel('Teams')
 
 # Display the plot in Streamlit
 st.pyplot(plt)
