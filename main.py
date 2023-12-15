@@ -250,12 +250,18 @@ filtered_AdjDE_data = bottom_10_AdjDE_data[~bottom_10_AdjDE_data['Team'].isin(ex
 avg_wins_top_AdjOE = filtered_AdjOE_data['Wins'].mean()
 avg_wins_bottom_AdjDE = filtered_AdjDE_data['Wins'].mean()
 
-# Visualization - Box plot for average wins excluding teams in top 10% for AdjOE and bottom 10% for AdjDE
+# Create a combined DataFrame for boxplot
+filtered_data = pd.concat([filtered_AdjOE_data['Wins'].rename('Top 10% AdjOE'), filtered_AdjDE_data['Wins'].rename('Top 10% AdjDE')], axis=1)
+
+# Melt the DataFrame to prepare for boxplot
+melted_data = pd.melt(filtered_data, var_name='Category', value_name='Average Wins')
+
+# Create the boxplot
 plt.figure(figsize=(8, 6))
-sns.boxplot(data=[filtered_AdjOE_data['Wins'], filtered_AdjDE_data['Wins']], palette='pastel')
-plt.xticks([0, 0.5], ['Top 10% AdjOE', 'Top 10% AdjDE'])
+sns.boxplot(x='Category', y='Average Wins', data=melted_data, palette='pastel')
 plt.title('Average Wins per Season for Top 10% AdjOE vs Top 10% AdjDE (Excluding Intersection)')
 plt.ylabel('Average Wins')
+plt.xticks([0, 1], ['Top 10% AdjOE', 'Top 10% AdjDE'])
 
 # Display the plot in Streamlit
 st.pyplot(plt)
