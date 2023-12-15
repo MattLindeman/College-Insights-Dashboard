@@ -278,6 +278,9 @@ plt.xlabel('Teams')
 # Display the plot in Streamlit
 st.pyplot(plt)
 
+# Closing statement
+st.write('I hope you enjoyed this dashboard and learned something new about college basketball!')
+
 # Footer - Data Source Information
 st.markdown('---')
 st.write('The data for this dashboard was compiled through the [Barttorvik](https://barttorvik.com/#) college basketball analytics website. The code and process for collecting, cleaning, and exploring the data can be found here:')
