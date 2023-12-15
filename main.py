@@ -15,14 +15,18 @@ st.write('Dive into the world of college basketball with a comprehensive collect
 url = 'https://raw.githubusercontent.com/MattLindeman/STAT386-Project/main/CBBdata19-23.csv'
 df = pd.read_csv(url)
 
+# Sort unique team names and conference names alphabetically
+teams_sorted = sorted(df['Team'].unique())
+conferences_sorted = sorted(df['Conf'].unique())
+
 # Filters section
 st.title('Data Filtering')
 
 # Filter by teams
-selected_teams = st.multiselect('Select Teams', df['Team'].unique())
+selected_teams = st.multiselect('Select Teams', teams_sorted)
 
 # Filter by conferences
-selected_conferences = st.multiselect('Select Conferences', df['Conf'].unique())
+selected_conferences = st.multiselect('Select Conferences', conferences_sorted)
 
 # Filter by years
 selected_years = st.multiselect('Select Years', df['Season'].unique())
@@ -137,7 +141,7 @@ team_wins = df.groupby('Team')['Wins'].sum().reset_index()
 team_wins_sorted = team_wins.sort_values(by='Wins', ascending=False)
 
 # Slider to select number of top teams to display
-num_top_teams = st.slider('Select Number of Top Teams to Display', min_value=1, max_value=len(team_wins_sorted), value=10)
+num_top_teams = st.slider('Select Number of Top Teams to Display', min_value=1, max_value=50, value=10)
 
 # Checkbox for weighted wins
 weighted_wins = st.checkbox('Show Weighted Wins')
