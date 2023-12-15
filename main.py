@@ -273,6 +273,6 @@ st.pyplot(plt)
 
 # Footer - Data Source Information
 st.markdown('---')
-st.write('The data for this dashboard was compiled through the Barttorvik college basketball analytics website. The code and process for collecting, cleaning, and exploring the data can be found here:')
+st.write('The data for this dashboard was compiled through the [Barttorvik](https://barttorvik.com/#) college basketball analytics website. The code and process for collecting, cleaning, and exploring the data can be found here:')
 st.write('Code: [GitHub](https://github.com/MattLindeman/STAT386-Project)')
 st.write('Process: [Blog](https://mattlindeman.github.io)')
