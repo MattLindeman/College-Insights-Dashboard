@@ -251,7 +251,7 @@ avg_wins_top_AdjOE = filtered_AdjOE_data['Wins'].mean()
 avg_wins_bottom_AdjDE = filtered_AdjDE_data['Wins'].mean()
 
 # Visualization - Box plot for average wins excluding teams in top 10% for AdjOE and bottom 10% for AdjDE
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(12, 6))
 sns.boxplot(data=[filtered_AdjOE_data['Wins'], filtered_AdjDE_data['Wins']], palette='pastel')
 plt.xticks([0, 1], ['Top 10% AdjOE', 'Top 10% AdjDE'])
 plt.title('Average Wins per Season for Top 10% AdjOE vs Top 10% AdjDE (Excluding Intersection)')
