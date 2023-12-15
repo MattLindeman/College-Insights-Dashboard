@@ -1,5 +1,7 @@
 import pandas as pd
 import seaborn as sns
+import matplotlib
+matplotlib.use('Agg')  # Set the backend to 'Agg'
 import matplotlib.pyplot as plt
 import streamlit as st
 from io import BytesIO
