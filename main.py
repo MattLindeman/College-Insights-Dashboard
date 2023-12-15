@@ -8,7 +8,7 @@ from io import BytesIO
 
 # Header - Welcome to the College Basketball Insights Dashboard
 st.title('Welcome to the College Basketball Insights Dashboard!')
-st.write('Dive into the world of college basketball with a comprehensive collection of data spanning the last 5 seasons. This interactive dashboard is designed to explore the statistical landscape of teams, conferences, and performance metrics that define college basketball. Discover trends, compare team performances, and unveil correlations between key metrics and wins. From Offensive Efficiency to Strength of Schedule, this dashboard offers a unique perspective on what drives success in the dynamic realm of college hoops.')
+st.write('Dive into the world of college basketball with a comprehensive collection of data spanning the last 5 seasons. This interactive dashboard is designed to explore the statistical landscape of teams, conferences, and performance metrics that define college basketball. Discover trends, compare team performances, and explore correlations between key metrics and wins. From Offensive Efficiency to Strength of Schedule, this dashboard offers a unique perspective on what drives success in the dynamic realm of college hoops.')
 
 
 # Load data
