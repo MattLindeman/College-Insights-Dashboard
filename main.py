@@ -129,22 +129,22 @@ st.pyplot(plt)
         
 # Streamlit app title and selection boxes
 st.title('Top Teams with Most Wins')
-st.write('This interactive plot allows you to view what teams have had the most wins. The default option displays all 5 seasons as a total, but individual seasons can be selected. There are also filters than can change how many teams are displayed and whether or not the wins should be weighted by strength of schedule. When weighting by strength of schedule win numbers will look slightly different than the regular totals. This is because a win against a difficult opponent will count for more than a win against an easier opponent.')
+st.write('This interactive plot allows you to view what teams have had the most wins. The default option displays all 5 seasons as a total, but individual seasons can be selected. There are also filters that can change how many teams are displayed and whether or not the wins should be weighted by strength of schedule. When weighting by strength of schedule, win numbers will look slightly different than the regular totals. This is because a win against a difficult opponent will count for more than a win against an easier opponent.')
 
-# Get unique teams and aggregate wins
-team_wins = df.groupby('Team')['Wins'].sum().reset_index()
+# Create a copy of the original DataFrame for manipulation
+filtered_df = df.copy()
 
 # Selection box for the number of seasons
 selected_seasons = st.selectbox('Select Number of Seasons', ['All'] + list(df['Season'].unique()))
 
 # Filter data based on selected seasons
 if selected_seasons != 'All':
-    df = df[df['Season'] == selected_seasons]
+    filtered_df = filtered_df[filtered_df['Season'] == selected_seasons]
 
-team_wins = df.groupby('Team')['Wins'].sum().reset_index()
+team_wins = filtered_df.groupby('Team')['Wins'].sum().reset_index()
 team_wins_sorted = team_wins.sort_values(by='Wins', ascending=False)
 
-# Slider to select number of top teams to display
+# Slider to select the number of top teams to display
 num_top_teams = st.slider('Select Number of Top Teams to Display', min_value=1, max_value=50, value=10)
 
 # Checkbox for weighted wins
@@ -152,8 +152,8 @@ weighted_wins = st.checkbox('Show Weighted Wins')
 
 # Calculate and visualize based on checkbox selection
 if weighted_wins:
-    df['WeightedWins'] = df['Wins'] * df['SoS']
-    weighted_team_wins = df.groupby('Team')['WeightedWins'].sum().reset_index()
+    filtered_df['WeightedWins'] = filtered_df['Wins'] * filtered_df['SoS']
+    weighted_team_wins = filtered_df.groupby('Team')['WeightedWins'].sum().reset_index()
     weighted_team_wins_sorted = weighted_team_wins.sort_values(by='WeightedWins', ascending=False)
     
     # Visualization - Bar plot for top teams with weighted wins
@@ -172,6 +172,7 @@ else:
     plt.ylabel('Team')
     st.pyplot(plt)
 
+
 # Streamlit app title
 st.title('Average Wins per Team by Conference')
 st.write('This interactive plot allows you to see which conferences have averaged the most wins per team. The graph defaults to view all 5 seasons, but individual seasons can be selected.')
@@ -186,20 +187,20 @@ selected_seasons = st.selectbox('Select Number of Seasons', ['All'] + list(df['S
 # Filter data based on selected seasons
 if selected_seasons != 'All':
     df_filtered = df[df['Season'] == selected_seasons]
-    conf_summary = df_filtered.groupby('Conf')['Wins', 'Team'].agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
-    conf_summary.columns = ['Conf', 'TotalWins', 'NumTeams']
+    conf_summary_filtered = df_filtered.groupby('Conf').agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
+    conf_summary_filtered.columns = ['Conf', 'TotalWins', 'NumTeams']
 else:
-    df_filtered = df.copy()
+    conf_summary_filtered = conf_summary.copy()
 
 # Calculate average wins per team per season
 if selected_seasons == 'All':
-    conf_summary['AvgWinsPerTeamPerSeason'] = conf_summary['TotalWins'] / (conf_summary['NumTeams'] * 5)
+    conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / (conf_summary_filtered['NumTeams'] * 5)
 else:
-    conf_summary['AvgWinsPerTeamPerSeason'] = conf_summary['TotalWins'] / conf_summary['NumTeams']  # Dividing by 1 for individual seasons
+    conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / conf_summary_filtered['NumTeams']
 
 # Visualization - Bar plot for average wins per team per season by conference
 plt.figure(figsize=(10, 10))
-sns.barplot(data=conf_summary.sort_values(by='AvgWinsPerTeamPerSeason', ascending=False),
+sns.barplot(data=conf_summary_filtered.sort_values(by='AvgWinsPerTeamPerSeason', ascending=False),
             x='AvgWinsPerTeamPerSeason', y='Conf', palette='twilight')  # Using 'twilight' color palette
 plt.title('Average Wins per Team by Conference')
 plt.xlabel('Average Wins per Team')
