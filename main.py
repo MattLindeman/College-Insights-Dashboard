@@ -181,7 +181,7 @@ conf_summary = df.groupby('Conf').agg({'Wins': 'sum', 'Team': 'nunique'}).reset_
 conf_summary.columns = ['Conf', 'TotalWins', 'NumTeams']
 
 # Selection box for the number of seasons
-selected_seasons = st.selectbox('Select Number of Seasons', ['All'] + list(df['Season'].unique()), key='season_select')
+selected_seasons = st.selectbox('Select Number of Seasons', ['All'] + sorted(df['Season'].unique()), key='season_select')
 
 # Filter data based on selected seasons
 if selected_seasons != 'All':
@@ -193,9 +193,9 @@ else:
 
 # Calculate average wins per team per season
 if selected_seasons == 'All':
-    conf_summary['AvgWinsPerTeamPerSeason'] = conf_summary['TotalWins'] / (conf_summary['NumTeams'] * 5)
+    conf_summary['AvgWinsPerTeamPerSeason'] = conf_summary['TotalWins'] / (conf_summary['NumTeams'] * df['Season'].nunique())
 else:
-    conf_summary['AvgWinsPerTeamPerSeason'] = conf_summary['TotalWins'] / conf_summary['NumTeams']  # Dividing by 1 for individual seasons
+    conf_summary['AvgWinsPerTeamPerSeason'] = conf_summary['TotalWins'] / conf_summary['NumTeams']
 
 # Visualization - Bar plot for average wins per team per season by conference
 plt.figure(figsize=(10, 10))
