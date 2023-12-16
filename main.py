@@ -207,6 +207,7 @@ plt.xlabel('Average Wins per Team')
 plt.ylabel('Conference')
 st.pyplot(plt)
 
+
 # Streamlit app title
 st.title('AdjOE and AdjDE for Selected Conferences')
 st.write('This interactive plot allows you to see the AdjOE and AdjDE boxplots for teams within, what is often referred to as, power 6 conferences. There is also the option to add or remove any conferences of your choosing.')
