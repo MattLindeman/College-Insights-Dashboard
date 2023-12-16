@@ -171,33 +171,29 @@ else:
     plt.xlabel('Total Wins')
     plt.ylabel('Team')
     st.pyplot(plt)
-    
+
 # Streamlit app title
 st.title('Average Wins per Team by Conference')
 st.write('This interactive plot allows you to see which conferences have averaged the most wins per team. The graph defaults to view all 5 seasons, but individual seasons can be selected.')
-
+    
 # Calculate total wins and number of unique teams per conference
-conf_summary = df.groupby(['Conf', 'Season']).agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
-
-# All available seasons
-all_seasons = sorted(df['Season'].unique())
+conf_summary = df.groupby('Conf').agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
+conf_summary.columns = ['Conf', 'TotalWins', 'NumTeams']
 
 # Selection box for the number of seasons
-selected_seasons = st.selectbox('Select Number of Seasons', ['All'] + all_seasons, key='season_select')
+selected_seasons = st.selectbox('Select Number of Seasons', ['All'] + list(df['Season'].unique()), key='season_select')
 
 # Filter data based on selected seasons
 if selected_seasons != 'All':
-    df_filtered = conf_summary[conf_summary['Season'] == selected_seasons]
+    df_filtered = df[df['Season'] == selected_seasons]
+    conf_summary_filtered = df_filtered.groupby('Conf').agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
+    conf_summary_filtered.columns = ['Conf', 'TotalWins', 'NumTeams']
 else:
-    df_filtered = conf_summary
-
-# Calculate total wins and number of unique teams per conference for filtered data
-conf_summary_filtered = df_filtered.groupby('Conf').agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
-conf_summary_filtered.columns = ['Conf', 'TotalWins', 'NumTeams']
+    conf_summary_filtered = conf_summary.copy()
 
 # Calculate average wins per team per season
 if selected_seasons == 'All':
-    conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / (conf_summary_filtered['NumTeams'] * len(all_seasons))
+    conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / (conf_summary_filtered['NumTeams'] * 5)
 else:
     conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / conf_summary_filtered['NumTeams']
 
