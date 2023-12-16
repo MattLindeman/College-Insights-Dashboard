@@ -186,20 +186,20 @@ selected_seasons = st.selectbox('Select Number of Seasons', ['All'] + list(df['S
 # Filter data based on selected seasons
 if selected_seasons != 'All':
     df_filtered = df[df['Season'] == selected_seasons]
-    conf_summary_filtered = df_filtered.groupby('Conf').agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
-    conf_summary_filtered.columns = ['Conf', 'TotalWins', 'NumTeams']
+    conf_summary = df_filtered.groupby('Conf')['Wins', 'Team'].agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
+    conf_summary.columns = ['Conf', 'TotalWins', 'NumTeams']
 else:
-    conf_summary_filtered = conf_summary.copy()
+    df_filtered = df.copy()
 
 # Calculate average wins per team per season
 if selected_seasons == 'All':
-    conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / (conf_summary_filtered['NumTeams'] * 5)
+    conf_summary['AvgWinsPerTeamPerSeason'] = conf_summary['TotalWins'] / (conf_summary['NumTeams'] * 5)
 else:
-    conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / conf_summary_filtered['NumTeams']
+    conf_summary['AvgWinsPerTeamPerSeason'] = conf_summary['TotalWins'] / conf_summary['NumTeams']  # Dividing by 1 for individual seasons
 
 # Visualization - Bar plot for average wins per team per season by conference
 plt.figure(figsize=(10, 10))
-sns.barplot(data=conf_summary_filtered.sort_values(by='AvgWinsPerTeamPerSeason', ascending=False),
+sns.barplot(data=conf_summary.sort_values(by='AvgWinsPerTeamPerSeason', ascending=False),
             x='AvgWinsPerTeamPerSeason', y='Conf', palette='twilight')  # Using 'twilight' color palette
 plt.title('Average Wins per Team by Conference')
 plt.xlabel('Average Wins per Team')
