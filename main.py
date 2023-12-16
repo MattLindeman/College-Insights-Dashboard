@@ -177,29 +177,30 @@ st.title('Average Wins per Team by Conference')
 st.write('This interactive plot allows you to see which conferences have averaged the most wins per team. The graph defaults to view all 5 seasons, but individual seasons can be selected.')
 
 # Calculate total wins and number of unique teams per conference
-conf_summary = df.groupby('Conf').agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
-conf_summary.columns = ['Conf', 'TotalWins', 'NumTeams']
+conf_summary = df.groupby(['Conf', 'Season']).agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
 
 # Selection box for the number of seasons
 selected_seasons = st.selectbox('Select Number of Seasons', ['All'] + sorted(df['Season'].unique()), key='season_select')
 
 # Filter data based on selected seasons
 if selected_seasons != 'All':
-    df_filtered = df[df['Season'] == selected_seasons]
-    conf_summary = df_filtered.groupby('Conf').agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
-    conf_summary.columns = ['Conf', 'TotalWins', 'NumTeams']
+    df_filtered = conf_summary[conf_summary['Season'] == selected_seasons]
 else:
-    df_filtered = df.copy()
+    df_filtered = conf_summary
+
+# Calculate total wins and number of unique teams per conference for filtered data
+conf_summary_filtered = df_filtered.groupby('Conf').agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
+conf_summary_filtered.columns = ['Conf', 'TotalWins', 'NumTeams']
 
 # Calculate average wins per team per season
 if selected_seasons == 'All':
-    conf_summary['AvgWinsPerTeamPerSeason'] = conf_summary['TotalWins'] / (conf_summary['NumTeams'] * df['Season'].nunique())
+    conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / (conf_summary_filtered['NumTeams'] * df['Season'].nunique())
 else:
-    conf_summary['AvgWinsPerTeamPerSeason'] = conf_summary['TotalWins'] / conf_summary['NumTeams']
+    conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / conf_summary_filtered['NumTeams']
 
 # Visualization - Bar plot for average wins per team per season by conference
 plt.figure(figsize=(10, 10))
-sns.barplot(data=conf_summary.sort_values(by='AvgWinsPerTeamPerSeason', ascending=False),
+sns.barplot(data=conf_summary_filtered.sort_values(by='AvgWinsPerTeamPerSeason', ascending=False),
             x='AvgWinsPerTeamPerSeason', y='Conf', palette='twilight')  # Using 'twilight' color palette
 plt.title('Average Wins per Team by Conference')
 plt.xlabel('Average Wins per Team')
