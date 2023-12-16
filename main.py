@@ -179,8 +179,11 @@ st.write('This interactive plot allows you to see which conferences have average
 # Calculate total wins and number of unique teams per conference
 conf_summary = df.groupby(['Conf', 'Season']).agg({'Wins': 'sum', 'Team': 'nunique'}).reset_index()
 
+# All available seasons
+all_seasons = sorted(df['Season'].unique())
+
 # Selection box for the number of seasons
-selected_seasons = st.selectbox('Select Number of Seasons', ['All'] + sorted(df['Season'].unique()), key='season_select')
+selected_seasons = st.selectbox('Select Number of Seasons', ['All'] + all_seasons, key='season_select')
 
 # Filter data based on selected seasons
 if selected_seasons != 'All':
@@ -194,7 +197,7 @@ conf_summary_filtered.columns = ['Conf', 'TotalWins', 'NumTeams']
 
 # Calculate average wins per team per season
 if selected_seasons == 'All':
-    conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / (conf_summary_filtered['NumTeams'] * df['Season'].nunique())
+    conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / (conf_summary_filtered['NumTeams'] * len(all_seasons))
 else:
     conf_summary_filtered['AvgWinsPerTeamPerSeason'] = conf_summary_filtered['TotalWins'] / conf_summary_filtered['NumTeams']
 
@@ -206,7 +209,6 @@ plt.title('Average Wins per Team by Conference')
 plt.xlabel('Average Wins per Team')
 plt.ylabel('Conference')
 st.pyplot(plt)
-
 
 # Streamlit app title
 st.title('AdjOE and AdjDE for Selected Conferences')
